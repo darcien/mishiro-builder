@@ -2,8 +2,75 @@
 
 import React from 'react';
 
-type Props = {};
+import Kirara from './API/Kirara';
 
-export default function CardList(props: Props) {
-  return <div />;
+type Props = {
+  onCardSelect: (card: Object) => void,
+  selectedChar: ?Object,
+};
+
+type State = {
+  cardList: ?Array<Object>,
+  isFetchingCardList: boolean,
+};
+
+const cardListStyle = {
+  display: 'flex',
+  width: '300px',
+  justifyContent: 'space-around',
+  flexWrap: 'wrap',
+};
+
+const cardStyle = {
+  margin: 'auto',
+};
+
+export default class CardList extends React.Component<Props, State> {
+  state = {
+    cardList: null,
+    isFetchingCardList: false,
+  };
+
+  componentDidMount() {
+    let {selectedChar} = this.props;
+
+    if (selectedChar) {
+      this.setState({
+        isFetchingCardList: true,
+      });
+
+      Kirara.getCardList(selectedChar.cards).then((cardList) => {
+        this.setState({
+          cardList,
+          isFetchingCardList: false,
+        });
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    // console.log('Card list unmounted');
+  }
+
+  render() {
+    let {onCardSelect, selectedChar} = this.props;
+
+    let {cardList} = this.state;
+
+    let content = [];
+
+    if (cardList) {
+      content = cardList.map((card) => {
+        let {id, icon_image_ref} = card;
+
+        return (
+          <div style={cardStyle} key={id} onClick={() => onCardSelect(card)}>
+            <img src={icon_image_ref} />
+          </div>
+        );
+      });
+    }
+
+    return <div style={cardListStyle}>{content}</div>;
+  }
 }
