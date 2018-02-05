@@ -11,9 +11,10 @@ type Props = {
 
 const listViewStyle = {
   flex: '0 0 400px',
-  margin: 6,
-  padding: 6,
-  border: '1px solid black',
+  height: '550px',
+  padding: '10px',
+  margin: '10px',
+  borderRight: '1px solid black',
   overflow: 'hidden',
   display: 'box',
 };

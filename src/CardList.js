@@ -15,13 +15,20 @@ type State = {
 };
 
 const cardListStyle = {
+  flex: '0 0 auto',
   display: 'flex',
   width: '300px',
-  justifyContent: 'space-around',
+  height: '550px',
+  padding: '10px',
+  margin: '10px',
+  justifyContent: 'space-evenly',
+  alignContent: 'flex-start',
   flexWrap: 'wrap',
+  borderRight: 'solid 1px',
 };
 
 const cardStyle = {
+  padding: '10px',
   margin: 'auto',
 };
 
@@ -57,7 +64,7 @@ export default class CardList extends React.Component<Props, State> {
 
     let {cardList} = this.state;
 
-    let content = [];
+    let content;
 
     if (cardList) {
       content = cardList.map((card) => {
@@ -69,6 +76,8 @@ export default class CardList extends React.Component<Props, State> {
           </div>
         );
       });
+    } else {
+      content = null;
     }
 
     return <div style={cardListStyle}>{content}</div>;

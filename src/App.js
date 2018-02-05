@@ -20,7 +20,6 @@ type State = {
 const appStyle = {
   display: 'flex',
   backgroundColor: '#ffe5e5',
-  justifyContent: 'space-between',
   padding: 6,
   overflow: 'hidden',
 };
@@ -35,9 +34,19 @@ export default class App extends Component<Props, State> {
   };
 
   componentDidMount() {
-    Kirara.getCharList().then((charList) => {
-      this.setState({charList});
-    });
+    this.setState({isLoading: true});
+    Kirara.getCharList()
+      .then((charList) => {
+        // Fake loading just to showcase
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(charList);
+          }, 2000);
+        });
+      })
+      .then((charList) => {
+        this.setState({charList, isLoading: false});
+      });
   }
 
   _onSearchChange = (event: Object) => {
@@ -55,26 +64,56 @@ export default class App extends Component<Props, State> {
   };
 
   render() {
-    let {charList, searchValue, selectedChar, selectedCard} = this.state;
+    let {
+      charList,
+      isLoading,
+      searchValue,
+      selectedChar,
+      selectedCard,
+    } = this.state;
 
-    return (
-      <div style={appStyle}>
-        <CharList
-          charList={charList}
-          searchValue={searchValue}
-          onSearchChange={this._onSearchChange}
-          onCharSelect={this._onCharSelect}
-        />
-        <CardList
-          key={selectedChar ? selectedChar.chara_id : -1}
-          selectedChar={selectedChar}
-          onCardSelect={this._onCardSelect}
-        />
-        <CardView
-          key={selectedCard ? selectedCard.id : -1}
-          selectedCard={selectedCard}
-        />
-      </div>
-    );
+    let content;
+
+    if (isLoading) {
+      content = (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'black',
+            height: '100%',
+            minHeight: '500px',
+          }}
+        >
+          <div className="lds-ripple">
+            <div />
+            <div />
+          </div>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={appStyle}>
+          <CharList
+            charList={charList}
+            searchValue={searchValue}
+            onSearchChange={this._onSearchChange}
+            onCharSelect={this._onCharSelect}
+          />
+          <CardList
+            key={selectedChar ? selectedChar.chara_id : undefined}
+            selectedChar={selectedChar}
+            onCardSelect={this._onCardSelect}
+          />
+          <CardView
+            key={selectedCard ? selectedCard.id : undefined}
+            selectedCard={selectedCard}
+          />
+        </div>
+      );
+    }
+
+    return content;
   }
 }
