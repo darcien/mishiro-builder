@@ -30,7 +30,7 @@ const searchStyle = {
 
 const listStyle = {
   minHeight: '400px',
-  maxHeight: '400px',
+  maxHeight: '480px',
   overflowY: 'scroll',
 };
 

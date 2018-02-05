@@ -17,6 +17,9 @@ type State = {
   charList: Array<Object>,
 };
 
+const loadingImgUrl =
+  'https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif';
+
 const appStyle = {
   display: 'flex',
   backgroundColor: '#ffe5e5',
@@ -86,10 +89,7 @@ export default class App extends Component<Props, State> {
             minHeight: '500px',
           }}
         >
-          <div className="lds-ripple">
-            <div />
-            <div />
-          </div>
+          <img style={{width: '120px', height: 'auto'}} src={loadingImgUrl} />
         </div>
       );
     } else {
