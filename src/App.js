@@ -5,6 +5,8 @@ import CharList from './CharList';
 import CardList from './CardList';
 import CardView from './CardView';
 
+import style from './styles/App.css';
+
 import Kirara from './API/Kirara';
 
 type Props = {};
@@ -86,10 +88,14 @@ export default class App extends Component<Props, State> {
             alignItems: 'center',
             backgroundColor: 'black',
             height: '100%',
-            minHeight: '500px',
+            minHeight: '600px',
           }}
         >
-          <img style={{width: '120px', height: 'auto'}} src={loadingImgUrl} />
+          <div className="lds-ripple">
+            <div />
+            <div />
+          </div>
+          {/* <img style={{width: '120px', height: 'auto'}} src={loadingImgUrl} /> */}
         </div>
       );
     } else {

@@ -7,11 +7,11 @@ var loaders = [
     test: /\.css$/,
     exclude: /\.global\.css$/,
     loaders: [
-      'style?sourceMap',
-      'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+      'style-loader?sourceMap',
+      'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
     ],
   },
-  {test: /\.global\.css$/, loader: 'style!raw'},
+  {test: /\.global\.css$/, loader: 'style-loader!raw'},
 ];
 
 module.exports = {
