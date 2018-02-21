@@ -60,7 +60,7 @@ export default class CardList extends React.Component<Props, State> {
   }
 
   render() {
-    let {onCardSelect, selectedChar} = this.props;
+    let {onCardSelect} = this.props;
 
     let {cardList} = this.state;
 

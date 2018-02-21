@@ -9,6 +9,74 @@ type Props = {
   onCharSelect: (selectedChar: Object) => void,
 };
 
+type State = {
+  selectedId: ?string,
+};
+
+export default class CharList extends React.Component<Props, State> {
+  state = {
+    selectedId: null,
+  };
+
+  render() {
+    let {charList, searchValue, onSearchChange, onCharSelect} = this.props;
+    let {selectedId} = this.state;
+
+    let filteredCharList = [];
+
+    if (searchValue.trim() === '') {
+      filteredCharList = charList;
+    } else {
+      filteredCharList = charList.filter((char) => {
+        let lowerCaseCharName = char.conventional.toLowerCase();
+        let kanji = char.kanji_spaced;
+        return lowerCaseCharName
+          .concat(' ', kanji)
+          .includes(searchValue.toLowerCase());
+      });
+    }
+
+    let contentList = filteredCharList.map((char) => {
+      let style =
+        selectedId && char.chara_id === selectedId
+          ? selectedCharStyle
+          : charStyle;
+
+      return (
+        <li
+          style={style}
+          key={char.chara_id}
+          onClick={() => {
+            this.setState({selectedId: char.chara_id});
+            onCharSelect(char);
+          }}
+        >
+          {char.conventional} ({char.kanji_spaced})
+        </li>
+      );
+    });
+
+    return (
+      <div style={listViewStyle}>
+        <input
+          style={searchStyle}
+          type="text"
+          placeholder="Search char..."
+          onChange={(event) => {
+            onSearchChange(event);
+          }}
+          value={searchValue}
+        />
+        <div style={listStyle}>
+          <ul style={commonStyle} className="char-list">
+            {contentList}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+}
+
 const listViewStyle = {
   flex: '0 0 400px',
   height: '550px',
@@ -40,59 +108,14 @@ const commonStyle = {
 };
 
 const charStyle = {
-  padding: '6',
-  lineHeight: '1.4',
-  margin: '6',
-  fontSize: '1.2em',
+  padding: 2,
+  margin: 2,
+  lineHeight: 1.2,
+  fontSize: '1.25em',
 };
 
-export default class CharList extends React.Component<Props> {
-  render() {
-    let {charList, searchValue, onSearchChange, onCharSelect} = this.props;
-
-    let filteredCharList = [];
-
-    if (searchValue.trim() === '') {
-      filteredCharList = charList;
-    } else {
-      filteredCharList = charList.filter((char) => {
-        let lowerCaseCharName = char.conventional.toLowerCase();
-
-        return lowerCaseCharName.includes(searchValue.toLowerCase());
-      });
-    }
-
-    let contentList = filteredCharList.map((char) => {
-      return (
-        <li
-          style={charStyle}
-          key={char.chara_id}
-          onClick={() => {
-            onCharSelect(char);
-          }}
-        >
-          {char.conventional}
-        </li>
-      );
-    });
-
-    return (
-      <div style={listViewStyle}>
-        <input
-          style={searchStyle}
-          type="text"
-          placeholder="Search char..."
-          onChange={(event) => {
-            onSearchChange(event);
-          }}
-          value={searchValue}
-        />
-        <div style={listStyle}>
-          <ul style={commonStyle} className="char-list">
-            {contentList}
-          </ul>
-        </div>
-      </div>
-    );
-  }
-}
+const selectedCharStyle = {
+  ...charStyle,
+  padding: 6,
+  backgroundColor: 'rgba(122, 185, 73, 0.75)',
+};

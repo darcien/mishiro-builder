@@ -41,14 +41,14 @@ export default class App extends Component<Props, State> {
   componentDidMount() {
     this.setState({isLoading: true});
     Kirara.getCharList()
-      .then((charList) => {
-        // Fake loading just to showcase
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(charList);
-          }, 2000);
-        });
-      })
+      // .then((charList) => {
+      //   // Fake loading just to showcase loading screen
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve(charList);
+      //     }, 2000);
+      //   });
+      // })
       .then((charList) => {
         this.setState({charList, isLoading: false});
       });
