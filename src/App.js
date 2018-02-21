@@ -19,14 +19,12 @@ type State = {
   charList: Array<Object>,
 };
 
-const loadingImgUrl =
-  'https://loading.io/spinners/hourglass/lg.sandglass-time-loading-gif.gif';
-
 const appStyle = {
   display: 'flex',
   backgroundColor: '#ffe5e5',
   padding: 6,
   overflow: 'hidden',
+  justifyContent: 'flex-start',
 };
 
 export default class App extends Component<Props, State> {

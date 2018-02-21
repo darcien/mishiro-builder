@@ -78,10 +78,7 @@ export default class CharList extends React.Component<Props, State> {
 }
 
 const listViewStyle = {
-  flex: '0 0 400px',
-  height: '550px',
   padding: '10px',
-  margin: '10px',
   borderRight: '1px solid black',
   overflow: 'hidden',
   display: 'box',
@@ -98,13 +95,14 @@ const searchStyle = {
 
 const listStyle = {
   minHeight: '400px',
-  maxHeight: '480px',
-  overflowY: 'scroll',
+  maxHeight: '500px',
+  overflowY: 'auto',
 };
 
 const commonStyle = {
   listStyle: 'none',
   padding: 0,
+  paddingRight: 18,
 };
 
 const charStyle = {
@@ -112,6 +110,7 @@ const charStyle = {
   margin: 2,
   lineHeight: 1.2,
   fontSize: '1.25em',
+  borderRadius: 4,
 };
 
 const selectedCharStyle = {
