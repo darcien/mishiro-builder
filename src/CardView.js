@@ -46,19 +46,22 @@ export default function CardView(props: Props) {
           <img style={styles.img} src={card_image_ref} />
           <div style={styles.loadingImg}>{ring}</div>
         </div>
-        <div style={styles.stats}>
-          <div style={{...styles.commonStat, ...styles.hpContainer}}>
-            HP : {hp_max} + {bonus_hp}
+        <div style={styles.detailContainer}>
+          <div style={styles.stats}>
+            <div style={{...styles.commonStat, ...styles.hpContainer}}>
+              HP : {hp_max} + {bonus_hp}
+            </div>
+            <div style={{...styles.commonStat, ...styles.vocalContainer}}>
+              Vocal : {vocal_max} + {bonus_vocal}
+            </div>
+            <div style={{...styles.commonStat, ...styles.danceContainer}}>
+              Dance : {dance_max} + {bonus_dance}
+            </div>
+            <div style={{...styles.commonStat, ...styles.visualContainer}}>
+              Visual : {visual_max} + {bonus_visual}
+            </div>
           </div>
-          <div style={{...styles.commonStat, ...styles.vocalContainer}}>
-            Vocal : {vocal_max} + {bonus_vocal}
-          </div>
-          <div style={{...styles.commonStat, ...styles.danceContainer}}>
-            Dance : {dance_max} + {bonus_dance}
-          </div>
-          <div style={{...styles.commonStat, ...styles.visualContainer}}>
-            Visual : {visual_max} + {bonus_visual}
-          </div>
+          <div style={styles.skillContainer}>Skill desc here</div>
         </div>
       </div>
     );
@@ -113,8 +116,13 @@ const styles = {
     borderBottom: 'solid 2px lightblue',
     zIndex: 1,
   },
-  stats: {
+  detailContainer: {
+    alignSelf: 'stretch',
+    display: 'flex',
+    justifyContent: 'space-evenly',
     marginTop: '15px',
+  },
+  stats: {
     fontSize: 16,
     lineHeight: 1.4,
   },
@@ -132,5 +140,13 @@ const styles = {
   },
   visualContainer: {
     backgroundColor: 'rgb(255,250,205,0.4)',
+  },
+  skillContainer: {
+    width: 200,
+    height: 100,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(146, 213, 87, 0.75)',
   },
 };
