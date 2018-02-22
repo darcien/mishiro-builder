@@ -1,5 +1,7 @@
 # mishiro-builder
 
+[![Build Status](https://travis-ci.org/darcien/mishiro-builder.svg?branch=master)](https://travis-ci.org/darcien/mishiro-builder)
+
 Simple CGSS app, serving from starlight.kirara.ca
 
 This is just a training project with react.

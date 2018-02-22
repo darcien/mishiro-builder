@@ -6,7 +6,8 @@ import CardList from './CardList';
 import CardView from './CardView';
 import {ripple} from './Loading';
 
-import style from './styles/App.css';
+require('./styles/App.css');
+// import style from './styles/App.css';
 
 import Kirara from './API/Kirara';
 
@@ -24,7 +25,6 @@ let windowHeight;
 
 if (document.documentElement) {
   windowHeight = document.documentElement.clientHeight;
-  console.log('windowHeight', windowHeight);
 }
 
 const appStyle = {
@@ -99,7 +99,6 @@ export default class App extends Component<Props, State> {
           }}
         >
           {ripple}
-          {/* <img style={{width: '120px', height: 'auto'}} src={loadingImgUrl} /> */}
         </div>
       );
     } else {

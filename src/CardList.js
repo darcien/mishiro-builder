@@ -13,14 +13,14 @@ type Props = {
 };
 
 type State = {
-  cardList: ?Array<Object>,
+  cardList: Array<Object>,
   isFetchingCardList: boolean,
   selectedCardId: ?string,
 };
 
 export default class CardList extends React.Component<Props, State> {
   state = {
-    cardList: null,
+    cardList: [],
     isFetchingCardList: false,
     selectedCardId: null,
   };
@@ -61,7 +61,7 @@ export default class CardList extends React.Component<Props, State> {
 
     if (isFetchingCardList) {
       content = <div style={styles.loadingContainer}>{ring}</div>;
-    } else if (cardList) {
+    } else if (cardList.length) {
       content = cardList.map((card) => {
         let {id, icon_image_ref} = card;
 

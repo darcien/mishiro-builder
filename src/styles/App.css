@@ -1,20 +1,20 @@
-:global .lds-ripple {
+.lds-ripple {
   display: inline-block;
   position: relative;
   width: 64px;
   height: 64px;
 }
-:global .lds-ripple div {
+.lds-ripple div {
   position: absolute;
   border: 4px solid #fdd;
   opacity: 1;
   border-radius: 50%;
   animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
-:global .lds-ripple div:nth-child(2) {
+.lds-ripple div:nth-child(2) {
   animation-delay: -0.5s;
 }
-:global @keyframes lds-ripple {
+@keyframes lds-ripple {
   0% {
     top: 28px;
     left: 28px;
@@ -31,13 +31,13 @@
   }
 }
 
-:global .lds-ring {
+.lds-ring {
   display: inline-block;
   position: relative;
   width: 64px;
   height: 64px;
 }
-:global .lds-ring div {
+.lds-ring div {
   box-sizing: border-box;
   display: block;
   position: absolute;
@@ -49,16 +49,16 @@
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   border-color: #fcf transparent transparent transparent;
 }
-:global .lds-ring div:nth-child(1) {
+.lds-ring div:nth-child(1) {
   animation-delay: -0.45s;
 }
-:global .lds-ring div:nth-child(2) {
+.lds-ring div:nth-child(2) {
   animation-delay: -0.3s;
 }
-:global .lds-ring div:nth-child(3) {
+.lds-ring div:nth-child(3) {
   animation-delay: -0.15s;
 }
-:global @keyframes lds-ring {
+@keyframes lds-ring {
   0% {
     transform: rotate(0deg);
   }
