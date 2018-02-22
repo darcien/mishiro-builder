@@ -40,7 +40,7 @@ export default class CharList extends React.Component<Props, State> {
       let style =
         selectedId && char.chara_id === selectedId
           ? selectedCharStyle
-          : charStyle;
+          : styles.char;
 
       return (
         <li
@@ -57,18 +57,20 @@ export default class CharList extends React.Component<Props, State> {
     });
 
     return (
-      <div style={listViewStyle}>
-        <input
-          style={searchStyle}
-          type="text"
-          placeholder="Search char..."
-          onChange={(event) => {
-            onSearchChange(event);
-          }}
-          value={searchValue}
-        />
-        <div style={listStyle}>
-          <ul style={commonStyle} className="char-list">
+      <div style={styles.container}>
+        <div style={styles.searchContainer}>
+          <input
+            style={styles.searchInput}
+            type="text"
+            placeholder="Search char..."
+            onChange={(event) => {
+              onSearchChange(event);
+            }}
+            value={searchValue}
+          />
+        </div>
+        <div style={styles.listContainer}>
+          <ul style={styles.list} className="char-list">
             {contentList}
           </ul>
         </div>
@@ -77,44 +79,51 @@ export default class CharList extends React.Component<Props, State> {
   }
 }
 
-const listViewStyle = {
-  padding: '10px',
-  borderRight: '1px solid black',
-  overflow: 'hidden',
-  display: 'box',
-};
-
-const searchStyle = {
-  fontSize: '1em',
-  width: '100%',
-  padding: '12px 15px',
-  margin: '10px 0',
-  boxSizing: 'border-box',
-  backgroundColor: '#f1e5f9',
-};
-
-const listStyle = {
-  minHeight: '400px',
-  maxHeight: '500px',
-  overflowY: 'auto',
-};
-
-const commonStyle = {
-  listStyle: 'none',
-  padding: 0,
-  paddingRight: 18,
-};
-
-const charStyle = {
-  padding: 2,
-  margin: 2,
-  lineHeight: 1.2,
-  fontSize: '1.25em',
-  borderRadius: 4,
+const styles = {
+  container: {
+    padding: 12,
+    borderRight: '1px solid black',
+    overflow: 'hidden',
+    display: 'flex',
+    flexFlow: 'column wrap',
+    alignItems: 'stretch',
+    width: 380,
+  },
+  searchContainer: {
+    width: '100%',
+    height: 40,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  searchInput: {
+    width: '100%',
+    fontSize: '1em',
+    padding: '12px 15px',
+    margin: 0,
+    backgroundColor: '#f1e5f9',
+  },
+  listContainer: {
+    flex: 1,
+    overflowY: 'auto',
+  },
+  list: {
+    listStyle: 'none',
+    padding: 0,
+    paddingRight: 18,
+  },
+  char: {
+    padding: 2,
+    margin: 2,
+    lineHeight: 1.2,
+    fontSize: '1.25em',
+    borderRadius: 4,
+  },
 };
 
 const selectedCharStyle = {
-  ...charStyle,
+  ...styles.char,
   padding: 6,
   backgroundColor: 'rgba(122, 185, 73, 0.75)',
 };

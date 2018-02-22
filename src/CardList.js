@@ -5,6 +5,7 @@
 import React from 'react';
 
 import Kirara from './API/Kirara';
+import {ring} from './Loading';
 
 type Props = {
   onCardSelect: (card: Object) => void,
@@ -28,11 +29,13 @@ export default class CardList extends React.Component<Props, State> {
     let {selectedChar} = this.props;
 
     if (selectedChar) {
+      console.log('Now fetching');
       this.setState({
         isFetchingCardList: true,
       });
 
       Kirara.getCardList(selectedChar.cards).then((cardList) => {
+        console.log('Done fetching');
         this.setState({
           cardList,
           isFetchingCardList: false,
@@ -52,11 +55,13 @@ export default class CardList extends React.Component<Props, State> {
   };
 
   render() {
-    let {cardList, selectedCardId} = this.state;
+    let {cardList, selectedCardId, isFetchingCardList} = this.state;
 
     let content;
 
-    if (cardList) {
+    if (isFetchingCardList) {
+      content = <div style={styles.loadingContainer}>{ring}</div>;
+    } else if (cardList) {
       content = cardList.map((card) => {
         let {id, icon_image_ref} = card;
 
@@ -65,7 +70,7 @@ export default class CardList extends React.Component<Props, State> {
             style={
               selectedCardId && selectedCardId === id
                 ? selectedCardStyle
-                : cardStyle
+                : styles.cardContainer
             }
             key={id}
             onClick={() => {
@@ -77,34 +82,48 @@ export default class CardList extends React.Component<Props, State> {
         );
       });
     } else {
-      content = null;
+      content = (
+        <div style={styles.loadingContainer}>No character selected.</div>
+      );
     }
 
-    return <div style={cardListStyle}>{content}</div>;
+    return <div style={styles.container}>{content}</div>;
   }
 }
 
-const cardListStyle = {
-  display: 'flex',
-  width: '350px',
-  padding: '10px',
-  justifyContent: 'space-evenly',
-  alignContent: 'flex-start',
-  flexWrap: 'wrap',
-  overflowY: 'scroll',
-  borderRight: 'solid 1px',
-};
-
-const cardStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 6,
-  margin: 2,
-  borderRadius: 12,
+const styles = {
+  container: {
+    display: 'flex',
+    width: '350px',
+    padding: '10px',
+    justifyContent: 'space-evenly',
+    alignContent: 'flex-start',
+    flexWrap: 'wrap',
+    overflowY: 'scroll',
+    borderRight: 'solid 1px',
+  },
+  loadingContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
+  cardContainer: {
+    width: 124,
+    height: 124,
+    backgroundColor: 'rgba(241, 147, 80, 0.75)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+    padding: 1,
+    borderRadius: 12,
+  },
 };
 
 const selectedCardStyle = {
-  ...cardStyle,
+  ...styles.cardContainer,
+  margin: 0,
+  padding: 6,
   backgroundColor: 'rgba(50, 84, 201, 0.75)',
 };

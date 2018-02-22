@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import CharList from './CharList';
 import CardList from './CardList';
 import CardView from './CardView';
+import {ripple} from './Loading';
 
 import style from './styles/App.css';
 
@@ -19,12 +20,21 @@ type State = {
   charList: Array<Object>,
 };
 
+let windowHeight;
+
+if (document.documentElement) {
+  windowHeight = document.documentElement.clientHeight;
+  console.log('windowHeight', windowHeight);
+}
+
 const appStyle = {
   display: 'flex',
-  backgroundColor: '#ffe5e5',
+  backgroundColor: 'rgb(255, 230, 230)',
   padding: 6,
   overflow: 'hidden',
   justifyContent: 'flex-start',
+  height: windowHeight ? windowHeight - 30 : 600,
+  minHeight: Math.min(windowHeight ? windowHeight - 130 : 500),
 };
 
 export default class App extends Component<Props, State> {
@@ -85,14 +95,10 @@ export default class App extends Component<Props, State> {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'black',
-            height: '100%',
-            minHeight: '600px',
+            height: windowHeight ? windowHeight - 30 : 600,
           }}
         >
-          <div className="lds-ripple">
-            <div />
-            <div />
-          </div>
+          {ripple}
           {/* <img style={{width: '120px', height: 'auto'}} src={loadingImgUrl} /> */}
         </div>
       );
