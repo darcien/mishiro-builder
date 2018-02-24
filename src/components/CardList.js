@@ -4,12 +4,16 @@
 
 import React from 'react';
 
-import Kirara from './API/Kirara';
+import Kirara from '../API/Kirara';
+import type {Char} from '../API/Kirara';
 import {ring} from './Loading';
+
+import {usedLocalStorage} from '../helpers/storage';
 
 type Props = {
   onCardSelect: (card: Object) => void,
-  selectedChar: ?Object,
+  selectedChar: ?Char,
+  useLocalStorage: boolean,
 };
 
 type State = {
@@ -26,21 +30,38 @@ export default class CardList extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    let {selectedChar} = this.props;
+    let {selectedChar, useLocalStorage} = this.props;
 
     if (selectedChar) {
-      console.log('Now fetching');
+      let {id} = selectedChar;
+      let cardListJson;
       this.setState({
         isFetchingCardList: true,
       });
+      if (useLocalStorage) {
+        cardListJson = localStorage.getItem(id);
+      }
 
-      Kirara.getCardList(selectedChar.cards).then((cardList) => {
-        console.log('Done fetching');
+      if (cardListJson) {
+        console.log('[Card] Using local data', id);
         this.setState({
-          cardList,
+          cardList: JSON.parse(cardListJson),
           isFetchingCardList: false,
         });
-      });
+      } else {
+        console.log('[Card] Fetching new data');
+
+        Kirara.getCardList(selectedChar.cards).then((cardList) => {
+          if (useLocalStorage) {
+            localStorage.setItem(id, JSON.stringify(cardList));
+            console.log('Used storage', usedLocalStorage());
+          }
+          this.setState({
+            cardList,
+            isFetchingCardList: false,
+          });
+        });
+      }
     }
   }
 

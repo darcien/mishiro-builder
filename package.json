@@ -4,7 +4,7 @@
   "private": true,
   "description": "MishiroBuilder",
   "scripts": {
-    "start": "webpack-dev-server --content-base assets/",
+    "start": "webpack-dev-server --content-base assets/ --host 0.0.0.0",
     "build": "webpack",
     "build-watch": "webpack --watch",
     "format": "prettier-eslint --write \"src/**/*.js\"",

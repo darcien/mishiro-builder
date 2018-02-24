@@ -2,11 +2,13 @@
 
 import React from 'react';
 
+import type {Char} from '../API/Kirara';
+
 type Props = {
-  charList: Array<Object>,
+  charList: Array<Char>,
   searchValue: string,
   onSearchChange: (event: Object) => void,
-  onCharSelect: (selectedChar: Object) => void,
+  onCharSelect: (selectedChar: Char) => void,
 };
 
 type State = {
@@ -28,8 +30,8 @@ export default class CharList extends React.Component<Props, State> {
       filteredCharList = charList;
     } else {
       filteredCharList = charList.filter((char) => {
-        let lowerCaseCharName = char.conventional.toLowerCase();
-        let kanji = char.kanji_spaced;
+        let lowerCaseCharName = char.nameRoman.toLowerCase();
+        let kanji = char.nameKanji;
         return lowerCaseCharName
           .concat(' ', kanji)
           .includes(searchValue.toLowerCase());
@@ -38,20 +40,18 @@ export default class CharList extends React.Component<Props, State> {
 
     let contentList = filteredCharList.map((char) => {
       let style =
-        selectedId && char.chara_id === selectedId
-          ? selectedCharStyle
-          : styles.char;
+        selectedId && char.id === selectedId ? selectedCharStyle : styles.char;
 
       return (
         <li
           style={style}
-          key={char.chara_id}
+          key={char.id}
           onClick={() => {
-            this.setState({selectedId: char.chara_id});
+            this.setState({selectedId: char.id});
             onCharSelect(char);
           }}
         >
-          {char.conventional} ({char.kanji_spaced})
+          {char.nameRoman} ({char.nameKanji})
         </li>
       );
     });
