@@ -7,7 +7,7 @@ import type {Char} from '../API/Kirara';
 type Props = {
   charList: Array<Char>,
   searchValue: string,
-  onSearchChange: (event: Object) => void,
+  onSearchChange: (searchValue: string) => void,
   onCharSelect: (selectedChar: Char) => void,
 };
 
@@ -64,7 +64,7 @@ export default class CharList extends React.Component<Props, State> {
             type="text"
             placeholder="Search char..."
             onChange={(event) => {
-              onSearchChange(event);
+              onSearchChange(event.target.value);
             }}
             value={searchValue}
           />
