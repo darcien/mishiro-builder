@@ -4,43 +4,64 @@
 
 import React from 'react';
 
-import Kirara from './API/Kirara';
+import Kirara from '../API/Kirara';
+import type {Char, CardIcon} from '../API/Kirara';
 import {ring} from './Loading';
 
+import {usedLocalStorage} from '../helpers/storage';
+
 type Props = {
-  onCardSelect: (card: Object) => void,
-  selectedChar: ?Object,
+  onCardSelect: (cardId: string) => void,
+  selectedChar: ?Char,
+  useLocalStorage: boolean,
 };
 
 type State = {
-  cardList: Array<Object>,
+  cardIconList: Array<CardIcon>,
   isFetchingCardList: boolean,
   selectedCardId: ?string,
 };
 
 export default class CardList extends React.Component<Props, State> {
   state = {
-    cardList: [],
+    cardIconList: [],
     isFetchingCardList: false,
     selectedCardId: null,
   };
 
   componentDidMount() {
-    let {selectedChar} = this.props;
+    let {selectedChar, useLocalStorage} = this.props;
 
     if (selectedChar) {
-      console.log('Now fetching');
+      let {id} = selectedChar;
+      let cardListJson;
       this.setState({
         isFetchingCardList: true,
       });
+      if (useLocalStorage) {
+        cardListJson = localStorage.getItem(id);
+      }
 
-      Kirara.getCardList(selectedChar.cards).then((cardList) => {
-        console.log('Done fetching');
+      if (cardListJson) {
+        console.log('[Card List] Using local data', id);
         this.setState({
-          cardList,
+          cardIconList: JSON.parse(cardListJson),
           isFetchingCardList: false,
         });
-      });
+      } else {
+        console.log('[Card List] Fetching new data');
+
+        Kirara.getCardIconList(selectedChar.cards).then((cardIconList) => {
+          if (useLocalStorage) {
+            localStorage.setItem(id, JSON.stringify(cardIconList));
+            console.log('Used storage', usedLocalStorage());
+          }
+          this.setState({
+            cardIconList,
+            isFetchingCardList: false,
+          });
+        });
+      }
     }
   }
 
@@ -48,22 +69,22 @@ export default class CardList extends React.Component<Props, State> {
     // console.log('Card list unmounted');
   }
 
-  _onCardClick = (card: Object) => {
+  _onCardIconClick = (id: string) => {
     let {onCardSelect} = this.props;
-    this.setState({selectedCardId: card.id});
-    onCardSelect(card);
+    this.setState({selectedCardId: id});
+    onCardSelect(id);
   };
 
   render() {
-    let {cardList, selectedCardId, isFetchingCardList} = this.state;
+    let {cardIconList, selectedCardId, isFetchingCardList} = this.state;
 
     let content;
 
     if (isFetchingCardList) {
       content = <div style={styles.loadingContainer}>{ring}</div>;
-    } else if (cardList.length) {
-      content = cardList.map((card) => {
-        let {id, icon_image_ref} = card;
+    } else if (cardIconList.length) {
+      content = cardIconList.map((cardIcon) => {
+        let {id, iconUrl} = cardIcon;
 
         return (
           <div
@@ -74,10 +95,10 @@ export default class CardList extends React.Component<Props, State> {
             }
             key={id}
             onClick={() => {
-              this._onCardClick(card);
+              this._onCardIconClick(id);
             }}
           >
-            <img src={icon_image_ref} />
+            <img src={iconUrl} />
           </div>
         );
       });

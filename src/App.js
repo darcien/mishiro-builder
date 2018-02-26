@@ -1,31 +1,37 @@
 // @flow
 
 import React, {Component} from 'react';
-import CharList from './CharList';
-import CardList from './CardList';
-import CardView from './CardView';
-import {ripple} from './Loading';
+import CharList from './components/CharList';
+import CardList from './components/CardList';
+import CardView from './components/CardView';
+import {ripple} from './components/Loading';
+import {storageAvailable} from './helpers/storage';
 
 require('./styles/App.css');
 // import style from './styles/App.css';
 
 import Kirara from './API/Kirara';
+import type {Char} from './API/Kirara';
 
 type Props = {};
 
 type State = {
   searchValue: string,
-  selectedCard: ?Object,
-  selectedChar: ?Object,
+  selectedCardId: ?string,
+  selectedChar: ?Char,
   isLoading: boolean,
-  charList: Array<Object>,
+  charList: Array<Char>,
 };
 
 let windowHeight;
 
 if (document.documentElement) {
   windowHeight = document.documentElement.clientHeight;
+} else {
+  windowHeight = 600;
 }
+
+const USE_LOCALSTORAGE = storageAvailable('localStorage');
 
 const appStyle = {
   display: 'flex',
@@ -33,33 +39,37 @@ const appStyle = {
   padding: 6,
   overflow: 'hidden',
   justifyContent: 'flex-start',
-  height: windowHeight ? windowHeight - 30 : 600,
-  minHeight: Math.min(windowHeight ? windowHeight - 130 : 500),
+  height: Math.max(windowHeight ? windowHeight - 30 : 600, 600),
 };
 
 export default class App extends Component<Props, State> {
   state = {
     searchValue: '',
     selectedChar: null,
-    selectedCard: null,
+    selectedCardId: null,
     isLoading: false,
     charList: [],
   };
 
   componentDidMount() {
+    let charListJson;
     this.setState({isLoading: true});
-    Kirara.getCharList()
-      // .then((charList) => {
-      //   // Fake loading just to showcase loading screen
-      //   return new Promise((resolve) => {
-      //     setTimeout(() => {
-      //       resolve(charList);
-      //     }, 2000);
-      //   });
-      // })
-      .then((charList) => {
+
+    if (USE_LOCALSTORAGE) {
+      charListJson = localStorage.getItem('charListJson');
+    }
+    if (charListJson) {
+      console.log('[App] Using local storage data');
+      this.setState({charList: JSON.parse(charListJson), isLoading: false});
+    } else {
+      console.log('[App] Fetching new data');
+      Kirara.getCharList().then((charList) => {
+        if (USE_LOCALSTORAGE) {
+          localStorage.setItem('charListJson', JSON.stringify(charList));
+        }
         this.setState({charList, isLoading: false});
       });
+    }
   }
 
   _onSearchChange = (event: Object) => {
@@ -68,12 +78,12 @@ export default class App extends Component<Props, State> {
     });
   };
 
-  _onCharSelect = (selectedChar: Object) => {
+  _onCharSelect = (selectedChar: Char) => {
     this.setState({selectedChar});
   };
 
-  _onCardSelect = (selectedCard: Object) => {
-    this.setState({selectedCard});
+  _onCardSelect = (selectedCardId: string) => {
+    this.setState({selectedCardId});
   };
 
   render() {
@@ -82,7 +92,7 @@ export default class App extends Component<Props, State> {
       isLoading,
       searchValue,
       selectedChar,
-      selectedCard,
+      selectedCardId,
     } = this.state;
 
     let content;
@@ -111,13 +121,15 @@ export default class App extends Component<Props, State> {
             onCharSelect={this._onCharSelect}
           />
           <CardList
-            key={selectedChar ? selectedChar.chara_id : undefined}
+            key={selectedChar ? selectedChar.id : undefined}
             selectedChar={selectedChar}
             onCardSelect={this._onCardSelect}
+            useLocalStorage={USE_LOCALSTORAGE}
           />
           <CardView
-            key={selectedCard ? selectedCard.id : undefined}
-            selectedCard={selectedCard}
+            key={selectedCardId ? selectedCardId : undefined}
+            selectedCardId={selectedCardId}
+            useLocalStorage={USE_LOCALSTORAGE}
           />
         </div>
       );
