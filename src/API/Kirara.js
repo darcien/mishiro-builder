@@ -17,6 +17,7 @@ export type Card = {
   attribute: 'cute' | 'cool' | 'passion',
   rarity: Rarity,
   idolizedId: string, //evolution_id
+  baseId: string, //series_id
   skillId: string, //skill_id
   leaderSkillId: string, //leader_skill_id
   minHp: string, //hp_min
@@ -99,6 +100,7 @@ export default class Kirara {
       name,
       attribute,
       evolution_id,
+      series_id,
       skill_id,
       leader_skill_id,
       hp_min,
@@ -133,6 +135,7 @@ export default class Kirara {
       attribute,
       rarity: {rarity, maxLevel: base_max_level},
       idolizedId: evolution_id,
+      baseId: series_id,
       skillId: skill_id,
       leaderSkillId: leader_skill_id,
       minHp: hp_min,

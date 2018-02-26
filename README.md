@@ -12,6 +12,8 @@ Todo:
 
 * ~~_Priority_ : Try to cache or minimize request to kirara.ca.~~
 
+* Validate data from Kirara.
+
 * Selection for card level, skill level and idolized state.
 
 * Additional scene for simulating unit building from CGSS.

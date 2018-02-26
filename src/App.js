@@ -72,10 +72,8 @@ export default class App extends Component<Props, State> {
     }
   }
 
-  _onSearchChange = (event: Object) => {
-    this.setState({
-      searchValue: event.target.value,
-    });
+  _onSearchChange = (searchValue: string) => {
+    this.setState({searchValue});
   };
 
   _onCharSelect = (selectedChar: Char) => {
@@ -105,7 +103,7 @@ export default class App extends Component<Props, State> {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'black',
-            height: windowHeight ? windowHeight - 30 : 600,
+            height: windowHeight,
           }}
         >
           {ripple}
@@ -128,6 +126,7 @@ export default class App extends Component<Props, State> {
           />
           <CardView
             key={selectedCardId ? selectedCardId : undefined}
+            onCardToggle={this._onCardSelect}
             selectedCardId={selectedCardId}
             useLocalStorage={USE_LOCALSTORAGE}
           />

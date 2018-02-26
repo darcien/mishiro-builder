@@ -12,6 +12,7 @@ import {usedLocalStorage} from '../helpers/storage';
 // import fullCard from '../dev-assets/fullCard.png';
 
 type Props = {
+  onCardToggle: (cardId: string) => void,
   selectedCardId: ?string,
   useLocalStorage: boolean,
 };
@@ -63,12 +64,13 @@ export default class CardView extends Component<Props, State> {
   }
 
   render() {
+    let {onCardToggle} = this.props;
     let {card, isFetchingCard} = this.state;
 
     let content;
 
     if (isFetchingCard) {
-      content = <div style={styles.container}>{ring};</div>;
+      content = <div style={styles.container}>{ring}</div>;
     } else if (card) {
       let {
         id,
@@ -83,6 +85,8 @@ export default class CardView extends Component<Props, State> {
         bonusVisual,
         imageUrl,
         skill,
+        baseId,
+        idolizedId,
       } = card;
 
       let paddingRight;
@@ -102,6 +106,16 @@ export default class CardView extends Component<Props, State> {
             <img style={styles.img} src={imageUrl} />
             <div style={styles.loadingImg}>{ring}</div>
           </div>
+          <div style={styles.buttonContainer}>
+            <button
+              style={styles.button}
+              onClick={() => {
+                onCardToggle(idolizedId ? idolizedId : baseId);
+              }}
+            >
+              Toggle idolized
+            </button>
+          </div>
           <div style={styles.detailContainer}>
             <div style={styles.stats}>
               <div style={{...styles.commonStat, ...styles.hpContainer}}>
@@ -117,7 +131,9 @@ export default class CardView extends Component<Props, State> {
                 Visual : {maxVisual} + {bonusVisual}
               </div>
             </div>
-            <div style={styles.skillContainer}>{skill ? skill.desc : null}</div>
+            <div style={styles.skillContainer}>
+              {skill ? skill.desc : 'Skill not available.'}
+            </div>
           </div>
         </div>
       );
@@ -173,11 +189,20 @@ const styles = {
     borderBottom: 'solid 2px lightblue',
     zIndex: 1,
   },
+  buttonContainer: {
+    margin: 15,
+  },
+  button: {
+    fontSize: 16,
+    padding: 6,
+    backgroundColor: 'rgb(142, 205, 119)',
+    border: 'solid 1px #fff',
+    borderRadius: 4,
+  },
   detailContainer: {
     alignSelf: 'stretch',
     display: 'flex',
     justifyContent: 'space-evenly',
-    marginTop: '15px',
   },
   stats: {
     fontSize: 16,
@@ -206,5 +231,6 @@ const styles = {
     alignItems: 'center',
     backgroundColor: 'rgba(146, 213, 87, 0.75)',
     padding: 6,
+    borderRadius: 6,
   },
 };
