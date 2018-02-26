@@ -24,7 +24,7 @@ function storageAvailable(type) {
 }
 
 function usedLocalStorage() {
-  return (JSON.stringify(localStorage).length / (1024 * 1024)).toFixed(3);
+  return (JSON.stringify(localStorage).length / 1024).toFixed(3) + 'KB';
 }
 
 export {storageAvailable, usedLocalStorage};

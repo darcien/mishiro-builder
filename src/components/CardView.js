@@ -2,73 +2,130 @@
 
 /*eslint-disable camelcase*/
 
-import React from 'react';
+import React, {Component} from 'react';
 import {ring} from './Loading';
+
+import Kirara from '../API/Kirara';
+import type {Card} from '../API/Kirara';
+import {usedLocalStorage} from '../helpers/storage';
 
 // import fullCard from '../dev-assets/fullCard.png';
 
 type Props = {
-  selectedCard: ?Object,
+  selectedCardId: ?string,
+  useLocalStorage: boolean,
 };
 
-export default function CardView(props: Props) {
-  let {selectedCard} = props;
+type State = {
+  card: ?Card,
+  isFetchingCard: boolean,
+};
 
-  let content;
+export default class CardView extends Component<Props, State> {
+  state = {
+    card: null,
+    isFetchingCard: false,
+  };
 
-  if (selectedCard) {
-    let {
-      id,
-      name,
-      hp_max,
-      vocal_max,
-      dance_max,
-      visual_max,
-      bonus_hp,
-      bonus_vocal,
-      bonus_dance,
-      bonus_visual,
-      card_image_ref,
-    } = selectedCard;
+  componentDidMount() {
+    let {selectedCardId, useLocalStorage} = this.props;
 
-    let paddingRight;
+    if (selectedCardId) {
+      let cardJson;
+      this.setState({
+        isFetchingCard: true,
+      });
+      if (useLocalStorage) {
+        cardJson = localStorage.getItem(selectedCardId);
+      }
 
-    if ((name: String).startsWith('［')) {
-      paddingRight = 18;
-    } else {
-      paddingRight = 6;
+      if (cardJson) {
+        console.log('[Card] Using local data', selectedCardId);
+        this.setState({
+          card: JSON.parse(cardJson),
+          isFetchingCard: false,
+        });
+      } else {
+        console.log('[Card] Fetching new data');
+
+        Kirara.getCard(selectedCardId).then((card) => {
+          if (useLocalStorage) {
+            localStorage.setItem(card.id, JSON.stringify(card));
+            console.log('Used storage', usedLocalStorage());
+          }
+          this.setState({
+            card,
+            isFetchingCard: false,
+          });
+        });
+      }
     }
-
-    content = (
-      <div key={id} style={styles.container}>
-        <div style={{...styles.nameContainer, paddingRight}}>{name}</div>
-        <div style={styles.imgContainer}>
-          <img style={styles.img} src={card_image_ref} />
-          <div style={styles.loadingImg}>{ring}</div>
-        </div>
-        <div style={styles.detailContainer}>
-          <div style={styles.stats}>
-            <div style={{...styles.commonStat, ...styles.hpContainer}}>
-              HP : {hp_max} + {bonus_hp}
-            </div>
-            <div style={{...styles.commonStat, ...styles.vocalContainer}}>
-              Vocal : {vocal_max} + {bonus_vocal}
-            </div>
-            <div style={{...styles.commonStat, ...styles.danceContainer}}>
-              Dance : {dance_max} + {bonus_dance}
-            </div>
-            <div style={{...styles.commonStat, ...styles.visualContainer}}>
-              Visual : {visual_max} + {bonus_visual}
-            </div>
-          </div>
-          <div style={styles.skillContainer}>Skill desc here</div>
-        </div>
-      </div>
-    );
-  } else {
-    content = <div style={styles.container}>No card selected.</div>;
   }
-  return content;
+
+  render() {
+    let {card, isFetchingCard} = this.state;
+
+    let content;
+
+    if (isFetchingCard) {
+      content = <div style={styles.container}>{ring};</div>;
+    } else if (card) {
+      let {
+        id,
+        nameWithTitle,
+        maxHp,
+        maxVocal,
+        maxDance,
+        maxVisual,
+        bonusHp,
+        bonusVocal,
+        bonusDance,
+        bonusVisual,
+        imageUrl,
+        skill,
+      } = card;
+
+      let paddingRight;
+
+      if (nameWithTitle.startsWith('［')) {
+        paddingRight = 18;
+      } else {
+        paddingRight = 6;
+      }
+
+      content = (
+        <div key={id} style={styles.container}>
+          <div style={{...styles.nameContainer, paddingRight}}>
+            {nameWithTitle}
+          </div>
+          <div style={styles.imgContainer}>
+            <img style={styles.img} src={imageUrl} />
+            <div style={styles.loadingImg}>{ring}</div>
+          </div>
+          <div style={styles.detailContainer}>
+            <div style={styles.stats}>
+              <div style={{...styles.commonStat, ...styles.hpContainer}}>
+                HP : {maxHp} + {bonusHp}
+              </div>
+              <div style={{...styles.commonStat, ...styles.vocalContainer}}>
+                Vocal : {maxVocal} + {bonusVocal}
+              </div>
+              <div style={{...styles.commonStat, ...styles.danceContainer}}>
+                Dance : {maxDance} + {bonusDance}
+              </div>
+              <div style={{...styles.commonStat, ...styles.visualContainer}}>
+                Visual : {maxVisual} + {bonusVisual}
+              </div>
+            </div>
+            <div style={styles.skillContainer}>{skill ? skill.desc : null}</div>
+          </div>
+        </div>
+      );
+    } else {
+      content = <div style={styles.container}>No card selected.</div>;
+    }
+    return content;
+  }
 }
 
 const styles = {
@@ -148,5 +205,6 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(146, 213, 87, 0.75)',
+    padding: 6,
   },
 };

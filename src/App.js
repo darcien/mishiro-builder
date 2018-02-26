@@ -17,7 +17,7 @@ type Props = {};
 
 type State = {
   searchValue: string,
-  selectedCard: ?Object,
+  selectedCardId: ?string,
   selectedChar: ?Char,
   isLoading: boolean,
   charList: Array<Char>,
@@ -39,15 +39,14 @@ const appStyle = {
   padding: 6,
   overflow: 'hidden',
   justifyContent: 'flex-start',
-  height: windowHeight ? windowHeight - 30 : 600,
-  minHeight: Math.min(windowHeight ? windowHeight - 130 : 500),
+  height: Math.max(windowHeight ? windowHeight - 30 : 600, 600),
 };
 
 export default class App extends Component<Props, State> {
   state = {
     searchValue: '',
     selectedChar: null,
-    selectedCard: null,
+    selectedCardId: null,
     isLoading: false,
     charList: [],
   };
@@ -79,12 +78,12 @@ export default class App extends Component<Props, State> {
     });
   };
 
-  _onCharSelect = (selectedChar: Object) => {
+  _onCharSelect = (selectedChar: Char) => {
     this.setState({selectedChar});
   };
 
-  _onCardSelect = (selectedCard: Object) => {
-    this.setState({selectedCard});
+  _onCardSelect = (selectedCardId: string) => {
+    this.setState({selectedCardId});
   };
 
   render() {
@@ -93,7 +92,7 @@ export default class App extends Component<Props, State> {
       isLoading,
       searchValue,
       selectedChar,
-      selectedCard,
+      selectedCardId,
     } = this.state;
 
     let content;
@@ -128,8 +127,9 @@ export default class App extends Component<Props, State> {
             useLocalStorage={USE_LOCALSTORAGE}
           />
           <CardView
-            key={selectedCard ? selectedCard.id : undefined}
-            selectedCard={selectedCard}
+            key={selectedCardId ? selectedCardId : undefined}
+            selectedCardId={selectedCardId}
+            useLocalStorage={USE_LOCALSTORAGE}
           />
         </div>
       );
